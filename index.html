@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Linguagem C</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d31;--panel2:#182640;--text:#edf3ff;--muted:#aab8d0;--accent:#55c2ff;--good:#37c987;--bad:#ff7272;--border:#2b3b57}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#1a3150 0,#0b1220 55%);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh;padding:28px 16px}
+main{max-width:850px;margin:auto}.hero{text-align:center;margin:12px 0 26px}.eyebrow{color:var(--accent);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}.hero h1{font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin:10px 0}.hero p{color:var(--muted);margin:0}
+.card{background:rgba(18,29,49,.96);border:1px solid var(--border);border-radius:20px;padding:clamp(18px,4vw,30px);box-shadow:0 18px 50px #0005}
+.topline{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.92rem;margin-bottom:12px}.progress{height:9px;background:#263650;border-radius:20px;overflow:hidden;margin-bottom:25px}.bar{height:100%;width:0;background:linear-gradient(90deg,#55c2ff,#7c8cff);transition:width .25s}
+h2{font-size:1.25rem;line-height:1.4;margin:0 0 20px}.options{display:grid;gap:11px}.option{display:flex;align-items:flex-start;gap:12px;text-align:left;width:100%;padding:14px 16px;background:var(--panel2);border:1px solid var(--border);border-radius:13px;color:var(--text);font:inherit;cursor:pointer;transition:.18s}.option:hover:not(:disabled){border-color:var(--accent);transform:translateY(-1px)}.letter{flex:0 0 29px;height:29px;border-radius:8px;background:#263b59;display:grid;place-items:center;font-weight:800;color:#bfeaff}.option.selected{border-color:var(--accent);background:#1d3854}.option.correct{border-color:var(--good);background:#123b32}.option.wrong{border-color:var(--bad);background:#46252c}.option:disabled{cursor:default;opacity:1}
+.feedback{display:none;margin-top:17px;padding:14px 16px;border-radius:12px;background:#1c2b42;color:var(--muted)}.feedback.show{display:block}.feedback strong{color:var(--text)}.actions{display:flex;justify-content:space-between;gap:12px;margin-top:22px}.btn{border:0;border-radius:11px;padding:12px 20px;font:700 1rem inherit;cursor:pointer}.primary{background:var(--accent);color:#061522}.secondary{background:#263650;color:var(--text)}.btn:disabled{opacity:.35;cursor:not-allowed}
+.result{text-align:center}.score{font-size:3.4rem;font-weight:850;color:var(--accent);margin:10px 0}.result p{color:var(--muted)}.review{text-align:left;margin-top:25px}.review-item{padding:13px 0;border-top:1px solid var(--border)}.review-item b{display:block;margin-bottom:5px}.hidden{display:none}.small{font-size:.88rem;color:var(--muted)}
+@media(max-width:520px){body{padding:18px 11px}.topline{font-size:.82rem}.actions .btn{padding:11px 14px}}
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div class="eyebrow">Desafio de programação</div>
+    <h1>Quiz de Linguagem C</h1>
+    <p>20 questões • 5 alternativas • descubra quanto você aprendeu</p>
+  </header>
+  <section class="card" id="quiz">
+    <div class="topline"><span id="counter">Questão 1 de 20</span><span id="answered">Respondidas: 0/20</span></div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <h2 id="question"></h2>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="actions">
+      <button class="btn secondary" id="prev" disabled>← Anterior</button>
+      <button class="btn primary" id="next" disabled>Próxima →</button>
+    </div>
+  </section>
+  <section class="card result hidden" id="result">
+    <div class="eyebrow">Resultado final</div>
+    <h2>Você concluiu o quiz!</h2>
+    <div class="score" id="score">0/20</div>
+    <p id="message"></p>
+    <button class="btn primary" id="restart">Refazer quiz</button>
+    <div class="review" id="review"></div>
+  </section>
+  <p class="small" style="text-align:center;margin:18px 0">Conteúdos: stdio.h, variáveis e tipos, entrada e saída, operadores relacionais e estrutura condicional.</p>
+</main>
+<script>
+const questions = [
+{q:"Qual é a finalidade da diretiva #include <stdio.h> em um programa C?",o:["Declarar todas as variáveis do programa","Disponibilizar funções de entrada e saída, como printf e scanf","Criar automaticamente a função main","Definir o tipo inteiro como padrão","Encerrar a execução do programa"],a:1,e:"stdio.h é o cabeçalho da biblioteca padrão de entrada e saída. Ele declara funções como printf e scanf."},
+{q:"Qual instrução exibe a mensagem Olá, mundo! na tela?",o:["scanf(\"Olá, mundo!\");","input(\"Olá, mundo!\");","printf(\"Olá, mundo!\");","display(\"Olá, mundo!\");","write(\"Olá, mundo!\");"],a:2,e:"printf é a função usada para enviar textos e valores para a saída padrão, normalmente o terminal."},
+{q:"Qual tipo é mais adequado para armazenar um número inteiro, como 25?",o:["char","float","double","int","void"],a:3,e:"int é o tipo inteiro básico da linguagem C e armazena valores sem parte fracionária."},
+{q:"Qual declaração cria uma variável chamada media capaz de armazenar valores decimais?",o:["int media;","float media;","texto media;","decimal media;","real media;"],a:1,e:"float é um tipo de ponto flutuante usado para representar números com parte decimal."},
+{q:"Em C, qual formato de especificação é normalmente usado em printf para exibir uma variável do tipo int?",o:["%f","%c","%s","%lf","%d"],a:4,e:"%d é o especificador usual para exibir um valor do tipo int."},
+{q:"Qual função é utilizada para receber dados digitados pelo usuário?",o:["printf()","scanf()","puts()","return()","show()"],a:1,e:"scanf lê dados da entrada padrão e armazena os valores nas variáveis indicadas."},
+{q:"Considere: int idade = 16; Qual chamada de scanf corresponde à leitura de um inteiro para idade?",o:["scanf(\"%d\", idade);","scanf(\"%f\", &idade);","scanf(\"%d\", &idade);","scanf(idade, \"%d\");","scanf(\"%c\", &idade);"],a:2,e:"Para ler um int, usa-se %d. O operador & fornece a scanf o endereço da variável idade."},
+{q:"Qual tipo de dado é indicado para armazenar um único caractere, como a letra A?",o:["char","int","float","double","string"],a:0,e:"char armazena um caractere. Em C, uma string é representada por uma sequência de char."},
+{q:"Qual será o resultado da expressão relacional 8 > 3 em C?",o:["0","8","3","1","Erro de compilação"],a:3,e:"A comparação é verdadeira. Em C, uma expressão relacional verdadeira resulta em 1."},
+{q:"Qual operador relacional verifica se dois valores são diferentes?",o:["=","==",">=","<=","!="],a:4,e:"!= significa diferente. Já == verifica igualdade e = realiza atribuição."},
+{q:"Qual é a diferença entre = e == na linguagem C?",o:["Ambos verificam igualdade","= compara e == atribui","= atribui um valor e == compara igualdade","= soma e == subtrai","Não existe diferença"],a:2,e:"O operador = atribui um valor a uma variável; == compara dois valores e produz verdadeiro ou falso."},
+{q:"Qual será o valor de resultado após a execução? int a = 10; int b = 4; int resultado = a < b;",o:["10","4","1","0","14"],a:3,e:"10 < 4 é falso. Em C, falso é representado pelo valor inteiro 0."},
+{q:"Qual estrutura permite executar um bloco de código somente quando uma condição é verdadeira?",o:["if","printf","include","scanf","define"],a:0,e:"A estrutura if avalia uma condição e executa seu bloco quando ela é diferente de zero."},
+{q:"Qual alternativa apresenta a sintaxe correta de uma estrutura condicional if em C?",o:["if idade >= 18 then { }","if (idade >= 18) { }","if [idade >= 18] { }","when (idade >= 18) { }","if idade >= 18: { }"],a:1,e:"Em C, a condição do if fica entre parênteses, e o bloco de comandos pode ser delimitado por chaves."},
+{q:"Observe: int nota = 7; if (nota >= 6) printf(\"Aprovado\"); O que será exibido?",o:["Reprovado","7","Aprovado","Nada será exibido","Erro porque falta else"],a:2,e:"Como 7 é maior ou igual a 6, a condição é verdadeira e printf exibe Aprovado."},
+{q:"Para executar um bloco quando a condição do if for falsa, utiliza-se qual palavra-chave?",o:["otherwise","elseif","case","default","else"],a:4,e:"else define o bloco alternativo, executado quando a condição do if é falsa."},
+{q:"Qual operador relacional significa maior ou igual a?",o:["=>",">=","=<","==","!="],a:1,e:">= representa maior ou igual. A ordem dos símbolos importa: => não é um operador válido em C."},
+{q:"Qual será a saída? int x = 5; if (x == 5) printf(\"Sim\"); else printf(\"Não\");",o:["Não","5","SimNão","Sim","Nenhuma saída"],a:3,e:"A expressão x == 5 é verdadeira, portanto apenas o primeiro printf é executado."},
+{q:"Qual tipo é mais apropriado para armazenar um valor como 3.14159 com maior precisão que float?",o:["char","int","void","short","double"],a:4,e:"double é um tipo de ponto flutuante que normalmente oferece mais precisão que float."},
+{q:"Em C, o que acontece quando uma condição usada em if possui valor 0?",o:["É considerada falsa","É considerada verdadeira","O programa sempre termina","O valor é convertido em texto","O compilador ignora o if"],a:0,e:"Em expressões condicionais de C, zero representa falso; qualquer valor diferente de zero representa verdadeiro."}
+];
+let current=0;
+let answers=Array(questions.length).fill(null);
+let order=questions.map((_,i)=>i);
+const $=id=>document.getElementById(id);
+function render(){
+ const q=questions[order[current]];
+ $("counter").textContent=`Questão ${current+1} de ${questions.length}`;
+ $("answered").textContent=`Respondidas: ${answers.filter(x=>x!==null).length}/${questions.length}`;
+ $("bar").style.width=`${(current/questions.length)*100}%`;
+ $("question").textContent=q.q;
+ $("options").innerHTML="";
+ q.o.forEach((option,i)=>{
+  const b=document.createElement("button"); b.className="option";
+  const letter=document.createElement("span");letter.className="letter";letter.textContent=String.fromCharCode(65+i);
+  const label=document.createElement("span");label.textContent=option;
+  b.append(letter,label);
+  if(answers[order[current]]!==null){
+   b.disabled=true;
+   if(i===q.a)b.classList.add("correct");
+   if(i===answers[order[current]]&&i!==q.a)b.classList.add("wrong");
+   if(i===answers[order[current]])b.classList.add("selected");
+  } else b.addEventListener("click",()=>choose(i));
+  $("options").appendChild(b);
+ });
+ const chosen=answers[order[current]];
+ $("feedback").className="feedback"+(chosen===null?"":" show");
+ $("feedback").innerHTML=chosen===null?"":`<strong>${chosen===q.a?"Muito bem!":"Vamos revisar."}</strong> ${q.e}`;
+ $("prev").disabled=current===0;
+ $("next").disabled=chosen===null;
+ $("next").textContent=current===questions.length-1?"Ver resultado":"Próxima →";
+}
+function choose(i){answers[order[current]]=i;render();}
+$("prev").addEventListener("click",()=>{if(current>0){current--;render();}});
+$("next").addEventListener("click",()=>{if(current<questions.length-1){current++;render();}else finish();});
+function finish(){
+ const score=answers.reduce((sum,ans,idx)=>sum+(ans===questions[idx].a?1:0),0);
+ $("quiz").classList.add("hidden");$("result").classList.remove("hidden");
+ $("score").textContent=`${score}/${questions.length}`;
+ $("message").textContent=score>=18?"Excelente! Você demonstrou ótimo domínio dos fundamentos.":score>=14?"Muito bom! Você compreendeu boa parte dos conteúdos.":score>=10?"Bom começo! Revise os comentários das questões para avançar.":"Continue praticando. Revisar os conceitos e tentar novamente vai ajudar.";
+ $("bar").style.width="100%";
+ $("review").innerHTML="<h3>Revisão das questões</h3>"+questions.map((q,i)=>{
+  const ok=answers[i]===q.a;
+  return `<div class="review-item"><b>${i+1}. ${ok?"✓":"✗"} ${q.q}</b><div class="small">Resposta correta: ${String.fromCharCode(65+q.a)} — ${q.o[q.a]}</div><div class="small">${q.e}</div></div>`;
+ }).join("");
+}
+$("restart").addEventListener("click",()=>{current=0;answers=Array(questions.length).fill(null);$("result").classList.add("hidden");$("quiz").classList.remove("hidden");render();});
+render();
+</script>
+</body>
+</html>
